@@ -2,7 +2,7 @@
 
 /**
  * php-fixed-length-file-parser
- * 
+ *
  * @link       https://github.com/fanatique/php-fixed-length-file-parser A parser class for handling fixed length text files in PHP
  * @license    http://sam.zoy.org/wtfpl/COPYING DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
  * @package    Fanatique
@@ -57,7 +57,7 @@ class FixedLengthFileParser implements ParserInterface
     /**
      * Expects an array with n arrays containing :
      * 'field_name', 'start', 'length'
-     * 
+     *
      * => array(
      *     array('field_name' => 'id,' 'start' => 0, 'length' => 2),
      *     ...
@@ -82,7 +82,7 @@ class FixedLengthFileParser implements ParserInterface
     /**
      * Setter for registering a closure that
      * evaluates if a fetched line needs to be parsed.
-     * 
+     *
      * The closure needs to
      * <ul>
      * <li>accept the unparsed current line as a string
@@ -99,7 +99,7 @@ class FixedLengthFileParser implements ParserInterface
     /**
      * Setter method for registering a callback which handles
      * each line *after* parsing.
-     * 
+     *
      * The closure needs to
      * <ul>
      * <li>accept the parsed current line as an associative array
@@ -190,6 +190,23 @@ class FixedLengthFileParser implements ParserInterface
                     $start,
                     $this->choppingMap[$i]['length']);
             $currentLine[$name] = trim($currentLine[$name]);
+
+            if(isset($this->choppingMap[$i]['field_type'])) {
+                switch($this->choppingMap[$i]['field_type']) {
+                    case 'int':
+                        $currentLine[$name] = (int)$currentLine[$name];
+                    break;
+
+                    case 'float':
+                        $currentLine[$name] = (float)$currentLine[$name];
+                    break;
+
+                    case 'string':
+                    default:
+                        // no-op (by default each value is processed as a string)
+                    break;
+                }
+            }
 
         }
 
